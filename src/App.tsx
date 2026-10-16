@@ -10,18 +10,21 @@ import ProductCardSkeleton from './componentes/ProductCardSkeleton'
 
 export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false)
-
   const [isConfirmationOpen, setIsConfirmationOpen] =
     useState(false)
-
+  const [searchInput, setSearchInput] = useState('')
+  const [search, setSearch] = useState('')
   const {
     data: products = [],
     isPending,
     isError,
     refetch,
   } = useQuery({
-    queryKey: ['products'],
-    queryFn: getProducts,
+    queryKey: search
+      ? ['products', { search }]
+      : ['products'],
+    queryFn: ({ signal }) =>
+      getProducts({ search }, signal),
     retry: 1,
   })
 
@@ -37,7 +40,52 @@ export default function App() {
         <p className="mt-2 text-muted">
           Elige tu próximo antojo.
         </p>
+        <form
+          role="search"
+          onSubmit={(event) => {
+            event.preventDefault()
+            setSearch(searchInput.trim())
+          }}
+          className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-end"
+        >
+          <div className="flex-1">
+            <label
+              htmlFor="product-search"
+              className="mb-2 block text-sm font-semibold"
+            >
+              Buscar por nombre
+            </label>
 
+            <input
+              id="product-search"
+              type="search"
+              value={searchInput}
+              onChange={(event) => {
+                setSearchInput(event.target.value)
+              }}
+              placeholder="Ej. waffle"
+              className="w-full rounded-lg border border-stone-300 bg-white px-4 py-3 outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-[#952c0b]"
+          >
+            Buscar
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setSearchInput('')
+              setSearch('')
+            }}
+            className="rounded-lg border border-stone-300 px-6 py-3 font-semibold hover:bg-soft"
+          >
+            Limpiar
+          </button>
+        </form>
         <button
           type="button"
           onClick={() => setIsConfirmationOpen(true)}
@@ -93,7 +141,9 @@ export default function App() {
               </div>
             ) : products.length === 0 ? (
               <p role="status" className="text-muted">
-                No hay productos disponibles.
+                {search
+                  ? `No encontramos postres con el nombre "${search}".`
+                  : 'No hay productos disponibles.'}
               </p>
             ) : (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
