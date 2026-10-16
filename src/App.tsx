@@ -31,7 +31,7 @@ export default function App() {
 >
   Ver confirmación de ejemplo
 </button>
-        <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-h-screen bg-page text-ink">
           <section aria-label="Catálogo de postres">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {products.map((product) => (

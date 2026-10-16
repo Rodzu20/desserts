@@ -9,7 +9,7 @@ export default function QuantityStepper({
     <div
       role="group"
       aria-label="Selector de cantidad de ejemplo"
-      className="relative mx-auto -mt-5 flex h-10 w-44 items-center justify-between rounded-full bg-orange-800 px-3 text-white"
+      className="relative mx-auto -mt-5 flex h-10 w-44 items-center justify-between rounded-full bg-brand    px-3 text-white"
     >
       <button
         type="button"
