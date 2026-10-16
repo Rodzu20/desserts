@@ -5,6 +5,9 @@ import { products } from './data/products'
 import {useState} from "react";
 import CartDrawer from './componentes/CartDrawer'
 import ConfirmOrderModal from './componentes/ConfirmOrderModal';
+
+
+
 export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isConfirmOrderOpen, setIsConfirmOrderOpen] = useState(false)
