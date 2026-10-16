@@ -6,6 +6,7 @@ import EmptyCart from './componentes/EmptyCart'
 import CartDrawer from './componentes/CartDrawer'
 import ConfirmOrderModal from './componentes/ConfirmOrderModal'
 import { getProducts } from './api/products'
+import ProductCardSkeleton from './componentes/ProductCardSkeleton'
 
 export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false)
@@ -55,9 +56,18 @@ export default function App() {
             aria-busy={isPending}
           >
             {isPending ? (
-              <p role="status" className="text-muted">
-                Cargando postres…
-              </p>
+              <div
+                role="status"
+                className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+              >
+                <span className="sr-only">
+                  Cargando postres…
+                </span>
+
+                {Array.from({ length: 9 }, (_, index) => (
+                  <ProductCardSkeleton key={index} />
+                ))}
+              </div>
             ) : isError ? (
               <div
                 role="alert"
