@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Red Hat Text";
+  src: url("/assets/fonts/RedHatText-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Red Hat Text", sans-serif;
+
+  --color-brand: #c73b0f;
+  --color-page: #fcf8f5;
+  --color-ink: #260f08;
+  --color-muted: #87635a;
+  --color-soft: #f4edeb;
+}
+
+body {
+  font-family: var(--font-sans);
+}

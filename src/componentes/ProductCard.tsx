@@ -17,11 +17,24 @@ export default function ProductCard({
 }: ProductCardProps) {
   return (
     <article>
-      <img
-        src={image}
-        alt={name}
-        className="aspect-square w-full rounded-lg object-cover"
-      />
+       <picture>
+         <source
+           media="(min-width: 1024px)"
+           srcSet={image}
+         />
+
+         <source
+            media="(min-width: 640px)"
+            srcSet={image.replace('-desktop.jpg', '-tablet.jpg')}
+         />
+
+         <img
+            src={image.replace('-desktop.jpg', '-mobile.jpg')}
+            alt={name}
+            loading="lazy"
+            className="aspect-[1.5] w-full rounded-lg object-cover sm:aspect-square lg:aspect-[1.05]"
+         />
+        </picture>
 
       {quantity === undefined ? (
         <button
@@ -48,7 +61,7 @@ export default function ProductCard({
           {name}
         </h2>
 
-        <p className="mt-1 font-semibold text-orange-800">
+        <p className="mt-1 font-semibold text-brand">
           ${price.toFixed(2)}
         </p>
       </div>
