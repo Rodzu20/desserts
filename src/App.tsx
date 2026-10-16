@@ -2,31 +2,61 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Header from './componentes/Header'
 import ProductCard from './componentes/ProductCard'
+import ProductCardSkeleton from './componentes/ProductCardSkeleton'
 import EmptyCart from './componentes/EmptyCart'
 import CartDrawer from './componentes/CartDrawer'
 import ConfirmOrderModal from './componentes/ConfirmOrderModal'
 import { getProducts } from './api/products'
-import ProductCardSkeleton from './componentes/ProductCardSkeleton'
 
 export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false)
+
   const [isConfirmationOpen, setIsConfirmationOpen] =
     useState(false)
+
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
+  const [category, setCategory] = useState('')
+
+  const allProductsQuery = useQuery({
+    queryKey: ['products'],
+    queryFn: ({ signal }) => getProducts({}, signal),
+    retry: 1,
+  })
+
+  const hasFilters = Boolean(search || category)
+
+  const filteredProductsQuery = useQuery({
+    queryKey: ['products', { search, category }],
+    queryFn: ({ signal }) =>
+      getProducts({ search, category }, signal),
+    enabled: hasFilters,
+    retry: 1,
+  })
+
+  const activeQuery = hasFilters
+    ? filteredProductsQuery
+    : allProductsQuery
+
   const {
     data: products = [],
     isPending,
     isError,
-    refetch,
-  } = useQuery({
-    queryKey: search
-      ? ['products', { search }]
-      : ['products'],
-    queryFn: ({ signal }) =>
-      getProducts({ search }, signal),
-    retry: 1,
-  })
+  } = activeQuery
+
+  const allProducts = allProductsQuery.data ?? []
+
+  const categories = Array.from(
+    new Set(allProducts.map((product) => product.category)),
+  ).sort((a, b) => a.localeCompare(b, 'es'))
+
+  function retryProducts() {
+    void allProductsQuery.refetch()
+
+    if (hasFilters) {
+      void filteredProductsQuery.refetch()
+    }
+  }
 
   return (
     <div className="min-h-screen bg-page text-ink">
@@ -40,6 +70,7 @@ export default function App() {
         <p className="mt-2 text-muted">
           Elige tu próximo antojo.
         </p>
+
         <form
           role="search"
           onSubmit={(event) => {
@@ -68,6 +99,38 @@ export default function App() {
             />
           </div>
 
+          <div>
+            <label
+              htmlFor="product-category"
+              className="mb-2 block text-sm font-semibold"
+            >
+              Categoría
+            </label>
+
+            <select
+              id="product-category"
+              value={category}
+              onChange={(event) => {
+                setCategory(event.target.value)
+              }}
+              disabled={
+                allProductsQuery.isPending ||
+                allProductsQuery.isError
+              }
+              className="w-full rounded-lg border border-stone-300 bg-white px-4 py-3 outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-50"
+            >
+              <option value="">
+                Todas las categorías
+              </option>
+
+              {categories.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button
             type="submit"
             className="rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-[#952c0b]"
@@ -80,17 +143,21 @@ export default function App() {
             onClick={() => {
               setSearchInput('')
               setSearch('')
+              setCategory('')
             }}
             className="rounded-lg border border-stone-300 px-6 py-3 font-semibold hover:bg-soft"
           >
             Limpiar
           </button>
         </form>
+
         <button
           type="button"
           onClick={() => setIsConfirmationOpen(true)}
           disabled={
-            isPending || isError || products.length === 0
+            allProductsQuery.isPending ||
+            allProductsQuery.isError ||
+            allProducts.length === 0
           }
           aria-haspopup="dialog"
           className="mt-4 text-sm font-semibold text-brand underline underline-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
@@ -131,9 +198,7 @@ export default function App() {
 
                 <button
                   type="button"
-                  onClick={() => {
-                    void refetch()
-                  }}
+                  onClick={retryProducts}
                   className="mt-4 rounded-full bg-brand px-5 py-2 text-white hover:bg-[#952c0b]"
                 >
                   Reintentar
@@ -141,8 +206,8 @@ export default function App() {
               </div>
             ) : products.length === 0 ? (
               <p role="status" className="text-muted">
-                {search
-                  ? `No encontramos postres con el nombre "${search}".`
+                {hasFilters
+                  ? 'No encontramos postres con los filtros seleccionados.'
                   : 'No hay productos disponibles.'}
               </p>
             ) : (
@@ -174,7 +239,7 @@ export default function App() {
       <ConfirmOrderModal
         isOpen={isConfirmationOpen}
         onClose={() => setIsConfirmationOpen(false)}
-        products={products}
+        products={allProducts}
       />
     </div>
   )
