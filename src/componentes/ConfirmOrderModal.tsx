@@ -1,14 +1,16 @@
 import { useEffect, useRef } from 'react'
-import { products } from '../data/products'
+import type { Product } from '../types/product'
 
 type ConfirmOrderModalProps = {
   isOpen: boolean
   onClose: () => void
+  products: Product[]
 }
 
 export default function ConfirmOrderModal({
   isOpen,
   onClose,
+  products,
 }: ConfirmOrderModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
