@@ -2,11 +2,13 @@ import Header from './componentes/Header'
 import ProductCard from './componentes/ProductCard'
 import EmptyCart from './componentes/EmptyCart'
 import { products } from './data/products'
-
+import {useState} from "react";
+import CartDrawer from './componentes/CartDrawer'
 export default function App() {
+  const [isCartOpen, setIsCartOpen] = useState(false)
   return (
     <div className="min-h-screen bg-orange-50 text-stone-900">
-      <Header />
+      <Header onOpenCart={() => setIsCartOpen(true)} />
 
       <main className="mx-auto max-w-6xl px-6 py-10">
         <h1 className="text-3xl font-bold">
@@ -37,6 +39,10 @@ export default function App() {
           </aside>
         </div>
       </main>
+              <CartDrawer
+          isOpen={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
+        />
     </div>
   )
 }
