@@ -1,25 +1,18 @@
 import { useEffect, useRef } from 'react'
-import type { Product } from '../types/product'
+import type { OrderSummary } from '../features/cart/interfaces/cart'
 
 type ConfirmOrderModalProps = {
   isOpen: boolean
   onClose: () => void
-  products: Product[]
+  order: OrderSummary | null
 }
 
 export default function ConfirmOrderModal({
   isOpen,
   onClose,
-  products,
+  order,
 }: ConfirmOrderModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
-
-  const previewProducts = products.slice(0, 3)
-
-  const previewTotal = previewProducts.reduce(
-    (total, product) => total + product.price,
-    0,
-  )
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -47,6 +40,7 @@ export default function ConfirmOrderModal({
     <dialog
       ref={dialogRef}
       aria-labelledby="confirmation-title"
+      aria-describedby="confirmation-description"
       onCancel={(event) => {
         event.preventDefault()
         onClose()
@@ -82,69 +76,72 @@ export default function ConfirmOrderModal({
           ¡Pedido confirmado!
         </h2>
 
-        <p className="mt-3 text-muted">
+        <p
+          id="confirmation-description"
+          className="mt-3 text-muted"
+        >
           Esperamos que disfrutes tus postres.
         </p>
 
         <div className="mt-6 rounded-lg bg-soft px-4">
-          {previewProducts.map((product) => (
-            <div
-              key={product.id}
-              className="flex items-center gap-3 border-b border-stone-200 py-4"
-            >
-              <img
-                src={product.image.replace(
-                  '-desktop.jpg',
-                  '-thumbnail.jpg',
-                )}
-                alt=""
-                className="h-12 w-12 rounded object-cover"
-              />
+          <ul className="divide-y divide-stone-200">
+            {order?.items.map((item) => (
+              <li
+                key={item.id}
+                className="flex items-center gap-3 py-4"
+              >
+                <img
+                  src={item.image.replace(
+                    '-desktop.jpg',
+                    '-thumbnail.jpg',
+                  )}
+                  alt=""
+                  className="h-12 w-12 rounded object-cover"
+                />
 
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold">
-                  {product.name}
-                </p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold">
+                    {item.name}
+                  </p>
 
-                <p className="mt-1 text-sm">
-                  <span className="mr-3 font-semibold text-brand">
-                    1×
-                  </span>
+                  <p className="mt-1 text-sm">
+                    <span className="mr-3 font-semibold text-brand">
+                      {item.quantity}×
+                    </span>
 
-                  <span className="text-muted">
-                    @ ${product.price.toFixed(2)}
-                  </span>
-                </p>
-              </div>
+                    <span className="text-muted">
+                      @ ${item.price.toFixed(2)}
+                    </span>
+                  </p>
+                </div>
 
-              <span className="shrink-0 text-sm font-semibold">
-                ${product.price.toFixed(2)}
-              </span>
-            </div>
-          ))}
+                <span className="shrink-0 text-sm font-semibold">
+                  $
+                  {(
+                    Math.round(item.price * 100) *
+                    item.quantity /
+                    100
+                  ).toFixed(2)}
+                </span>
+              </li>
+            ))}
+          </ul>
 
-          <div className="flex items-center justify-between gap-4 py-5">
-            <p className="text-sm">
-              Total de ejemplo
-            </p>
+          <div className="flex items-center justify-between gap-4 border-t border-stone-200 py-5">
+            <p className="text-sm">Total del pedido</p>
 
             <strong className="text-2xl">
-              ${previewTotal.toFixed(2)}
+              ${(order?.total ?? 0).toFixed(2)}
             </strong>
           </div>
         </div>
-
-        <p className="mt-4 text-sm text-muted">
-          Esta es una vista de ejemplo. No se ha realizado
-          ningún pedido.
-        </p>
 
         <button
           type="button"
           onClick={onClose}
           className="mt-6 w-full rounded-full bg-brand px-6 py-3 font-semibold text-white hover:bg-[#952c0b]"
         >
-          Volver al catálogo
+          Empezar nuevo pedido
         </button>
       </div>
     </dialog>

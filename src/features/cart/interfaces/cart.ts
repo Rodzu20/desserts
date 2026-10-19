@@ -15,3 +15,7 @@ export interface CartStore {
   decreaseQuantity: (id: string) => void
   clearCart: () => void
 }
+export interface OrderSummary {
+  items: CartItem[]
+  total: number
+}

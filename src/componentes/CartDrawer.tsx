@@ -4,11 +4,13 @@ import CartSummary from '../features/cart/components/CartSummary'
 type CartDrawerProps = {
   isOpen: boolean
   onClose: () => void
+  onConfirm: () => void
 }
 
 export default function CartDrawer({
   isOpen,
   onClose,
+  onConfirm,
 }: CartDrawerProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -69,7 +71,7 @@ export default function CartDrawer({
           </button>
         </div>
 
-        <CartSummary />
+        <CartSummary onConfirm={onConfirm} />
       </div>
     </dialog>
   )

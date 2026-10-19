@@ -8,13 +8,18 @@ import CartSummary from '../features/cart/components/CartSummary'
 import CartDrawer from '../componentes/CartDrawer'
 import ConfirmOrderModal from '../componentes/ConfirmOrderModal'
 import { getProducts } from '../api/products'
+import type { OrderSummary } from '../features/cart/interfaces/cart'
+import {
+    selectCartTotal,
+    useCartStore,
+} from '../features/cart/stores/userCartStore'
 
 
 export default function CatalogPage() {
     const [isCartOpen, setIsCartOpen] = useState(false)
 
-    const [isConfirmationOpen, setIsConfirmationOpen] =
-        useState(false)
+    const [confirmedOrder, setConfirmedOrder] =
+        useState<OrderSummary | null>(null)
 
     const [searchInput, setSearchInput] = useState('')
     const [search, setSearch] = useState('')
@@ -59,7 +64,19 @@ export default function CatalogPage() {
             void filteredProductsQuery.refetch()
         }
     }
+    function handleConfirmOrder() {
+        const cart = useCartStore.getState()
 
+        if (cart.items.length === 0) return
+
+        setConfirmedOrder({
+            items: cart.items.map((item) => ({ ...item })),
+            total: selectCartTotal(cart),
+        })
+
+        cart.clearCart()
+        setIsCartOpen(false)
+    }
     return (
         <div className="min-h-screen bg-page text-ink">
             <Header onOpenCart={() => setIsCartOpen(true)} />
@@ -153,19 +170,6 @@ export default function CatalogPage() {
                     </button>
                 </form>
 
-                <button
-                    type="button"
-                    onClick={() => setIsConfirmationOpen(true)}
-                    disabled={
-                        allProductsQuery.isPending ||
-                        allProductsQuery.isError ||
-                        allProducts.length === 0
-                    }
-                    aria-haspopup="dialog"
-                    className="mt-4 text-sm font-semibold text-brand underline underline-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                    Ver confirmación de ejemplo
-                </button>
 
                 <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
                     <section
@@ -237,7 +241,7 @@ export default function CatalogPage() {
                         )}
                     </section>
                     <aside aria-label="Resumen del carrito">
-                        <CartSummary />
+                        <CartSummary onConfirm={handleConfirmOrder} />
                     </aside>
                 </div>
             </main>
@@ -245,12 +249,13 @@ export default function CatalogPage() {
             <CartDrawer
                 isOpen={isCartOpen}
                 onClose={() => setIsCartOpen(false)}
+                onConfirm={handleConfirmOrder}
             />
 
             <ConfirmOrderModal
-                isOpen={isConfirmationOpen}
-                onClose={() => setIsConfirmationOpen(false)}
-                products={allProducts}
+                isOpen={confirmedOrder !== null}
+                onClose={() => setConfirmedOrder(null)}
+                order={confirmedOrder}
             />
         </div>
     )
