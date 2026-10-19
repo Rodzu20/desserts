@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router'
 import { getProductById } from '../api/products'
-
+import CategoryBadge from '../features/categories/components/CategoryBadge'
 export default function ProductDetailPage() {
   const { id = '' } = useParams()
 
@@ -112,7 +112,7 @@ export default function ProductDetailPage() {
 
             <div className="rounded-xl bg-white p-6 sm:p-8">
               <p className="text-sm font-semibold text-muted">
-                {product.category}
+                <CategoryBadge categoryId={product.categoryId} />
               </p>
 
               <h1 className="mt-3 text-3xl font-bold sm:text-4xl">

@@ -1,10 +1,10 @@
 import QuantityStepper from './QuantityStepper'
 import { useCartStore } from '../features/cart/stores/userCartStore'
-
+import CategoryBadge from '../features/categories/components/CategoryBadge'
 type ProductCardProps = {
   id: string
   name: string
-  category: string
+  categoryId: string
   price: number
   image: string
 }
@@ -12,7 +12,7 @@ type ProductCardProps = {
 export default function ProductCard({
   id,
   name,
-  category,
+  categoryId,
   price,
   image,
 }: ProductCardProps) {
@@ -53,7 +53,7 @@ export default function ProductCard({
         <button
           type="button"
           onClick={() =>
-            addProduct({ id, name, category, price, image })
+            addProduct({ id, name, categoryId, price, image })
           }
           className="relative mx-auto -mt-5 flex h-10 w-44 items-center justify-center gap-2 rounded-full border border-stone-400 bg-white text-sm font-semibold hover:border-brand hover:text-brand"
         >
@@ -73,7 +73,7 @@ export default function ProductCard({
       )}
 
       <div className="mt-4">
-        <p className="text-sm text-muted">{category}</p>
+        <CategoryBadge categoryId={categoryId} />
 
         <h2 className="mt-1 font-semibold">{name}</h2>
 

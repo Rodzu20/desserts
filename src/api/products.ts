@@ -10,11 +10,21 @@ export async function getProducts(
   filters: ProductFilters = {},
   signal?: AbortSignal,
 ): Promise<Product[]> {
+  const search = filters.search?.trim()
+
+  const where = {
+    ...(search
+      ? { name: { contains: search } }
+      : {}),
+    ...(filters.category
+      ? { categoryId: { eq: filters.category } }
+      : {}),
+  }
+
   const response = await api.get<Product[]>('/products', {
     signal,
     params: {
-      'name:contains': filters.search?.trim() || undefined,
-      category: filters.category || undefined,
+      _where: JSON.stringify(where),
     },
   })
 

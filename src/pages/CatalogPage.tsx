@@ -13,7 +13,7 @@ import {
     selectCartTotal,
     useCartStore,
 } from '../features/cart/stores/userCartStore'
-
+import { useCategoriesQuery } from '../features/categories/hooks/useCategoriesQuery'
 
 export default function CatalogPage() {
     const [isCartOpen, setIsCartOpen] = useState(false)
@@ -25,44 +25,27 @@ export default function CatalogPage() {
     const [search, setSearch] = useState('')
     const [category, setCategory] = useState('')
 
-    const allProductsQuery = useQuery({
-        queryKey: ['products'],
-        queryFn: ({ signal }) => getProducts({}, signal),
-        retry: 1,
-    })
+    const categoriesQuery = useCategoriesQuery()
+    const categories = categoriesQuery.data ?? []
 
-    const hasFilters = Boolean(search || category)
-
-    const filteredProductsQuery = useQuery({
+    const productsQuery = useQuery({
         queryKey: ['products', { search, category }],
         queryFn: ({ signal }) =>
             getProducts({ search, category }, signal),
-        enabled: hasFilters,
         retry: 1,
     })
-
-    const activeQuery = hasFilters
-        ? filteredProductsQuery
-        : allProductsQuery
 
     const {
         data: products = [],
         isPending,
         isError,
-    } = activeQuery
+    } = productsQuery
 
-    const allProducts = allProductsQuery.data ?? []
-
-    const categories = Array.from(
-        new Set(allProducts.map((product) => product.category)),
-    ).sort((a, b) => a.localeCompare(b, 'es'))
+    const hasFilters = Boolean(search || category)
 
     function retryProducts() {
-        void allProductsQuery.refetch()
-
-        if (hasFilters) {
-            void filteredProductsQuery.refetch()
-        }
+        void productsQuery.refetch()
+        void categoriesQuery.refetch()
     }
     function handleConfirmOrder() {
         const cart = useCartStore.getState()
@@ -133,21 +116,33 @@ export default function CatalogPage() {
                                 setCategory(event.target.value)
                             }}
                             disabled={
-                                allProductsQuery.isPending ||
-                                allProductsQuery.isError
+                                categoriesQuery.isPending || categoriesQuery.isError
                             }
                             className="w-full rounded-lg border border-stone-300 bg-white px-4 py-3 outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-50"
                         >
                             <option value="">
                                 Todas las categorías
                             </option>
-
                             {categories.map((item) => (
-                                <option key={item} value={item}>
-                                    {item}
+                                <option key={item.id} value={item.id}>
+                                    {item.name}
                                 </option>
                             ))}
                         </select>
+                        {categoriesQuery.isError && (
+                            <p role="alert" className="mt-2 text-sm text-brand">
+                                No pudimos cargar las categorías.{' '}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        void categoriesQuery.refetch()
+                                    }}
+                                    className="font-semibold underline"
+                                >
+                                    Reintentar
+                                </button>
+                            </p>
+                        )}
                     </div>
 
                     <button
@@ -223,7 +218,7 @@ export default function CatalogPage() {
                                         <ProductCard
                                             id={product.id}
                                             name={product.name}
-                                            category={product.category}
+                                            categoryId={product.categoryId}
                                             price={product.price}
                                             image={product.image}
                                         />

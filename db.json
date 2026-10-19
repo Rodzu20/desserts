@@ -1,65 +1,76 @@
 {
+  "categories": [
+    { "id": "1", "name": "Waffles" },
+    { "id": "2", "name": "Crème brûlée" },
+    { "id": "3", "name": "Macarons" },
+    { "id": "4", "name": "Tiramisú" },
+    { "id": "5", "name": "Baklava" },
+    { "id": "6", "name": "Pies" },
+    { "id": "7", "name": "Tortas" },
+    { "id": "8", "name": "Brownies" },
+    { "id": "9", "name": "Panna cotta" }
+  ],
   "products": [
     {
       "id": "1",
       "name": "Waffle con frutos rojos",
-      "category": "Waffles",
+      "categoryId": "1",
       "price": 6.5,
       "image": "/assets/images/image-waffle-desktop.jpg"
     },
     {
       "id": "2",
       "name": "Crème brûlée de vainilla",
-      "category": "Crème brûlée",
+      "categoryId": "2",
       "price": 7,
       "image": "/assets/images/image-creme-brulee-desktop.jpg"
     },
     {
       "id": "3",
       "name": "Selección de cinco macarons",
-      "category": "Macarons",
+      "categoryId": "3",
       "price": 8,
       "image": "/assets/images/image-macaron-desktop.jpg"
     },
     {
       "id": "4",
       "name": "Tiramisú clásico",
-      "category": "Tiramisú",
+      "categoryId": "4",
       "price": 5.5,
       "image": "/assets/images/image-tiramisu-desktop.jpg"
     },
     {
       "id": "5",
       "name": "Baklava de pistacho",
-      "category": "Baklava",
+      "categoryId": "5",
       "price": 4,
       "image": "/assets/images/image-baklava-desktop.jpg"
     },
     {
       "id": "6",
       "name": "Pie de limón y merengue",
-      "category": "Pies",
+      "categoryId": "6",
       "price": 5,
       "image": "/assets/images/image-meringue-desktop.jpg"
     },
     {
       "id": "7",
       "name": "Torta red velvet",
-      "category": "Tortas",
+      "categoryId": "7",
       "price": 4.5,
       "image": "/assets/images/image-cake-desktop.jpg"
     },
     {
       "id": "8",
       "name": "Brownie de caramelo salado",
-      "category": "Brownies",
+      "categoryId": "8",
       "price": 4.5,
       "image": "/assets/images/image-brownie-desktop.jpg"
     },
     {
       "id": "9",
       "name": "Panna cotta de vainilla",
-      "category": "Panna cotta",
+      "categoryId": "9",
       "price": 6.5,
       "image": "/assets/images/image-panna-cotta-desktop.jpg"
     }
