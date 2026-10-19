@@ -217,6 +217,7 @@ export default function CatalogPage() {
                                 {products.map((product) => (
                                     <div key={product.id}>
                                         <ProductCard
+                                            id={product.id}
                                             name={product.name}
                                             category={product.category}
                                             price={product.price}
