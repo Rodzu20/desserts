@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import Header from '../componentes/Header'
 import ProductCard from '../componentes/ProductCard'
 import ProductCardSkeleton from '../componentes/ProductCardSkeleton'
-import EmptyCart from '../componentes/EmptyCart'
+import CartSummary from '../features/cart/components/CartSummary'
 import CartDrawer from '../componentes/CartDrawer'
 import ConfirmOrderModal from '../componentes/ConfirmOrderModal'
 import { getProducts } from '../api/products'
@@ -236,9 +236,8 @@ export default function CatalogPage() {
                             </div>
                         )}
                     </section>
-
                     <aside aria-label="Resumen del carrito">
-                        <EmptyCart />
+                        <CartSummary />
                     </aside>
                 </div>
             </main>

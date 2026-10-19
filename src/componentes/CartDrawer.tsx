@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import EmptyCart from './EmptyCart'
+import CartSummary from '../features/cart/components/CartSummary'
 
 type CartDrawerProps = {
   isOpen: boolean
@@ -47,7 +47,7 @@ export default function CartDrawer({
           onClose()
         }
       }}
-      className="fixed inset-y-0 left-auto right-0 m-0 h-dvh max-h-dvh w-full max-w-sm border-0 bg-orange-50 p-0 text-stone-900 backdrop:bg-black/40"
+      className="fixed inset-y-0 left-auto right-0 m-0 h-dvh max-h-dvh w-full max-w-md overflow-y-auto border-0 bg-page p-0 text-ink backdrop:bg-black/40"
     >
       <div className="min-h-full p-6">
         <div className="mb-6 flex items-center justify-between">
@@ -63,13 +63,13 @@ export default function CartDrawer({
             onClick={onClose}
             aria-label="Cerrar carrito"
             autoFocus
-            className="rounded-full px-3 py-2 hover:bg-orange-100 focus-visible:outline-2 focus-visible:outline-orange-800"
+            className="rounded-full px-3 py-2 hover:bg-soft focus-visible:outline-2 focus-visible:outline-brand"
           >
             ✕
           </button>
         </div>
 
-        <EmptyCart />
+        <CartSummary />
       </div>
     </dialog>
   )
