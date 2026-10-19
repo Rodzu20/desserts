@@ -1,27 +1,11 @@
 import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router'
-import { getProductById } from '../api/products'
 import CategoryBadge from '../features/categories/components/CategoryBadge'
+import { useProductQuery } from '../features/products/hooks/useProductsQueries'
 export default function ProductDetailPage() {
   const { id = '' } = useParams()
 
-  const productQuery = useQuery({
-    queryKey: ['product', id],
-    queryFn: ({ signal }) =>
-      getProductById(id, signal),
-    enabled: Boolean(id),
-    retry: (failureCount, error) => {
-      if (
-        axios.isAxiosError(error) &&
-        error.response?.status === 404
-      ) {
-        return false
-      }
-
-      return failureCount < 1
-    },
-  })
+  const productQuery = useProductQuery(id)
 
   const product = productQuery.data
 

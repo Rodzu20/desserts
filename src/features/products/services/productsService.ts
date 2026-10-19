@@ -1,15 +1,14 @@
-import { api } from '../shared/services/api'
-import type { Product } from '../types/product'
-
-type ProductFilters = {
-  search?: string
-  category?: string
-}
+import { api } from '../../../shared/services/api'
+import type {
+  PaginatedProducts,
+  Product,
+  ProductFilters,
+} from '../interfaces/product'
 
 export async function getProducts(
   filters: ProductFilters = {},
   signal?: AbortSignal,
-): Promise<Product[]> {
+): Promise<PaginatedProducts> {
   const search = filters.search?.trim()
 
   const where = {
@@ -21,12 +20,17 @@ export async function getProducts(
       : {}),
   }
 
-  const response = await api.get<Product[]>('/products', {
-    signal,
-    params: {
-      _where: JSON.stringify(where),
+  const response = await api.get<PaginatedProducts>(
+    '/products',
+    {
+      signal,
+      params: {
+        _where: JSON.stringify(where),
+        _page: filters.page ?? 1,
+        _per_page: 8,
+      },
     },
-  })
+  )
 
   return response.data
 }

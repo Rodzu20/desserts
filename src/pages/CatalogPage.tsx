@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
 import Header from '../componentes/Header'
 import ProductCard from '../componentes/ProductCard'
@@ -7,15 +6,17 @@ import ProductCardSkeleton from '../componentes/ProductCardSkeleton'
 import CartSummary from '../features/cart/components/CartSummary'
 import CartDrawer from '../componentes/CartDrawer'
 import ConfirmOrderModal from '../componentes/ConfirmOrderModal'
-import { getProducts } from '../api/products'
 import type { OrderSummary } from '../features/cart/interfaces/cart'
 import {
     selectCartTotal,
     useCartStore,
 } from '../features/cart/stores/userCartStore'
 import { useCategoriesQuery } from '../features/categories/hooks/useCategoriesQuery'
+import { useProductsQuery } from '../features/products/hooks/useProductsQueries'
+
 
 export default function CatalogPage() {
+    const [page, setPage] = useState(1)
     const [isCartOpen, setIsCartOpen] = useState(false)
 
     const [confirmedOrder, setConfirmedOrder] =
@@ -27,19 +28,20 @@ export default function CatalogPage() {
 
     const categoriesQuery = useCategoriesQuery()
     const categories = categoriesQuery.data ?? []
-
-    const productsQuery = useQuery({
-        queryKey: ['products', { search, category }],
-        queryFn: ({ signal }) =>
-            getProducts({ search, category }, signal),
-        retry: 1,
+    const productsQuery = useProductsQuery({
+        search,
+        category,
+        page,
     })
 
     const {
-        data: products = [],
+        data: result,
         isPending,
         isError,
+        isFetching,
     } = productsQuery
+
+    const products = result?.data ?? []
 
     const hasFilters = Boolean(search || category)
 
@@ -78,6 +80,7 @@ export default function CatalogPage() {
                     onSubmit={(event) => {
                         event.preventDefault()
                         setSearch(searchInput.trim())
+                        setPage(1)
                     }}
                     className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-end"
                 >
@@ -114,6 +117,7 @@ export default function CatalogPage() {
                             value={category}
                             onChange={(event) => {
                                 setCategory(event.target.value)
+                                setPage(1)
                             }}
                             disabled={
                                 categoriesQuery.isPending || categoriesQuery.isError
@@ -158,6 +162,7 @@ export default function CatalogPage() {
                             setSearchInput('')
                             setSearch('')
                             setCategory('')
+                            setPage(1)
                         }}
                         className="rounded-lg border border-stone-300 px-6 py-3 font-semibold hover:bg-soft"
                     >
@@ -180,7 +185,7 @@ export default function CatalogPage() {
                                     Cargando postres…
                                 </span>
 
-                                {Array.from({ length: 9 }, (_, index) => (
+                                {Array.from({ length: 8 }, (_, index) => (
                                     <ProductCardSkeleton key={index} />
                                 ))}
                             </div>
@@ -233,6 +238,42 @@ export default function CatalogPage() {
                                     </div>
                                 ))}
                             </div>
+                        )}
+                        {result && !isError && result.items > 0 && (
+                            <nav
+                                aria-label="Paginación de productos"
+                                className="mt-8 flex flex-wrap items-center justify-center gap-4"
+                            >
+                                <button
+                                    type="button"
+                                    disabled={isFetching || result.prev === null}
+                                    onClick={() => {
+                                        if (result.prev !== null) {
+                                            setPage(result.prev)
+                                        }
+                                    }}
+                                    className="rounded-lg border border-brand px-4 py-2 font-semibold text-brand hover:bg-soft disabled:cursor-not-allowed disabled:opacity-40"
+                                >
+                                    Anterior
+                                </button>
+
+                                <p aria-live="polite" className="text-sm text-muted">
+                                    Página {(result.prev ?? 0) + 1} de {result.pages}
+                                </p>
+
+                                <button
+                                    type="button"
+                                    disabled={isFetching || result.next === null}
+                                    onClick={() => {
+                                        if (result.next !== null) {
+                                            setPage(result.next)
+                                        }
+                                    }}
+                                    className="rounded-lg border border-brand px-4 py-2 font-semibold text-brand hover:bg-soft disabled:cursor-not-allowed disabled:opacity-40"
+                                >
+                                    Siguiente
+                                </button>
+                            </nav>
                         )}
                     </section>
                     <aside aria-label="Resumen del carrito">
