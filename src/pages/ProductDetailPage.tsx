@@ -106,6 +106,12 @@ export default function ProductDetailPage() {
               <p className="mt-6 text-3xl font-bold text-brand">
                 ${product.price.toFixed(2)}
               </p>
+              <Link
+                to={`/productos/${product.id}/editar`}
+                className="mt-6 inline-block rounded-full border border-brand px-6 py-3 font-semibold text-brand hover:bg-soft"
+              >
+                Editar producto
+              </Link>
             </div>
           </article>
         ) : null}

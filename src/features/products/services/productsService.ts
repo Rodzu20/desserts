@@ -54,3 +54,17 @@ export async function createProduct(
 
   return response.data
 }
+export async function updateProduct({
+  id,
+  data,
+}: {
+  id: string
+  data: Omit<Product, 'id'>
+}): Promise<Product> {
+  const response = await api.put<Product>(
+    `/products/${encodeURIComponent(id)}`,
+    data,
+  )
+
+  return response.data
+}
