@@ -46,3 +46,11 @@ export async function getProductById(
 
   return response.data
 }
+
+export async function createProduct(
+  data: Omit<Product, 'id'>,
+): Promise<Product> {
+  const response = await api.post<Product>('/products', data)
+
+  return response.data
+}

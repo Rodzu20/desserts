@@ -74,7 +74,12 @@ export default function CatalogPage() {
                 <p className="mt-2 text-muted">
                     Elige tu próximo antojo.
                 </p>
-
+                <Link
+                    to="/productos/nuevo"
+                    className="mt-4 inline-block rounded-full bg-brand px-5 py-2 font-semibold text-white hover:bg-[#952c0b]"
+                >
+                    + Crear producto
+                </Link>
                 <form
                     role="search"
                     onSubmit={(event) => {

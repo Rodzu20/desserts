@@ -1,14 +1,41 @@
 {
   "categories": [
-    { "id": "1", "name": "Waffles" },
-    { "id": "2", "name": "Crème brûlée" },
-    { "id": "3", "name": "Macarons" },
-    { "id": "4", "name": "Tiramisú" },
-    { "id": "5", "name": "Baklava" },
-    { "id": "6", "name": "Pies" },
-    { "id": "7", "name": "Tortas" },
-    { "id": "8", "name": "Brownies" },
-    { "id": "9", "name": "Panna cotta" }
+    {
+      "id": "1",
+      "name": "Waffles"
+    },
+    {
+      "id": "2",
+      "name": "Crème brûlée"
+    },
+    {
+      "id": "3",
+      "name": "Macarons"
+    },
+    {
+      "id": "4",
+      "name": "Tiramisú"
+    },
+    {
+      "id": "5",
+      "name": "Baklava"
+    },
+    {
+      "id": "6",
+      "name": "Pies"
+    },
+    {
+      "id": "7",
+      "name": "Tortas"
+    },
+    {
+      "id": "8",
+      "name": "Brownies"
+    },
+    {
+      "id": "9",
+      "name": "Panna cotta"
+    }
   ],
   "products": [
     {
@@ -73,6 +100,14 @@
       "categoryId": "9",
       "price": 6.5,
       "image": "/assets/images/image-panna-cotta-desktop.jpg"
+    },
+    {
+      "name": "Waffle de chocolate",
+      "categoryId": "1",
+      "price": 8.5,
+      "image": "/assets/images/image-waffle-desktop.jpg",
+      "id": "FTJArVzFk_w"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

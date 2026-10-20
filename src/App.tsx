@@ -1,25 +1,16 @@
-import { Route, Routes } from 'react-router'
-import CatalogPage from './pages/CatalogPage'
-import ProductDetailPage from './pages/ProductDetailPage'
-import NotFoundPage from './pages/NotFoundPage'
+import { Toaster } from 'sonner'
+import AppRoutes from './routes/AppRoutes'
 
 export default function App() {
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={<CatalogPage />}
-      />
+    <>
+      <AppRoutes />
 
-      <Route
-        path="/producto/:id"
-        element={<ProductDetailPage />}
+      <Toaster
+        position="top-right"
+        richColors
+        closeButton
       />
-
-      <Route
-        path="*"
-        element={<NotFoundPage />}
-      />
-    </Routes>
+    </>
   )
 }
