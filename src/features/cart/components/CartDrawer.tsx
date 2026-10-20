@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import CartSummary from '../features/cart/components/CartSummary'
+import CartSummary from './CartSummary'
 
 type CartDrawerProps = {
   isOpen: boolean

@@ -1,4 +1,4 @@
-import EmptyCart from '../../../componentes/EmptyCart'
+import EmptyCart from './EmptyCart'
 import {
     selectCartCount,
     selectCartTotal,

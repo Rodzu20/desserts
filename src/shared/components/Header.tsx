@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import {
   selectCartCount,
   useCartStore,
-} from '../features/cart/stores/userCartStore'
+} from '../../features/cart/stores/userCartStore'
 
 type HeaderProps = {
   onOpenCart: () => void

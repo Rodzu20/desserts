@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
-import type { OrderSummary } from '../features/cart/interfaces/cart'
-
+import type { OrderSummary } from '../interfaces/cart'
 type ConfirmOrderModalProps = {
   isOpen: boolean
   onClose: () => void

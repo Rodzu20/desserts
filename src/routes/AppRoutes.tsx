@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router'
-import CatalogPage from '../pages/CatalogPage'
-import ProductDetailPage from '../pages/ProductDetailPage'
-import NotFoundPage from '../pages/NotFoundPage'
+import CatalogPage from '../features/products/pages/CatalogPage'
+import ProductDetailPage from '../features/products/pages/ProductDetailPage'
+import NotFoundPage from '../shared/pages/NotFoundPage'
 import CreateProductPage from '../features/products/pages/CreateProductPage'
 import EditProductPage from '../features/products/pages/EditProductPage'
 export default function AppRoutes() {

@@ -1,21 +1,21 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import Header from '../componentes/Header'
-import ProductCard from '../componentes/ProductCard'
-import ProductCardSkeleton from '../componentes/ProductCardSkeleton'
-import CartSummary from '../features/cart/components/CartSummary'
-import CartDrawer from '../componentes/CartDrawer'
-import ConfirmOrderModal from '../componentes/ConfirmOrderModal'
-import type { OrderSummary } from '../features/cart/interfaces/cart'
+import Header from '../../../shared/components/Header'
+import ProductCard from '../components/ProductCard'
+import ProductCardSkeleton from '../components/ProductCardSkeleton'
+import DeleteProductModal from '../components/DeleteProductModal'
+import CartSummary from '../../cart/components/CartSummary'
+import CartDrawer from '../../cart/components/CartDrawer'
+import ConfirmOrderModal from '../../cart/components/ConfirmOrderModal'
+import type { OrderSummary } from '../../cart/interfaces/cart'
 import {
-    selectCartTotal,
-    useCartStore,
-} from '../features/cart/stores/userCartStore'
-import { useCategoriesQuery } from '../features/categories/hooks/useCategoriesQuery'
-import { useProductsQuery } from '../features/products/hooks/useProductsQueries'
-import DeleteProductModal from '../features/products/components/DeleteProductModal'
-import { useDeleteProductMutation } from '../features/products/hooks/useProductsMutations'
-import type { Product } from '../features/products/interfaces/product'
+  selectCartTotal,
+  useCartStore,
+} from '../../cart/stores/userCartStore'
+import { useCategoriesQuery } from '../../categories/hooks/useCategoriesQuery'
+import { useProductsQuery } from '../hooks/useProductsQueries'
+import { useDeleteProductMutation } from '../hooks/useProductsMutations'
+import type { Product } from '../interfaces/product'
 
 export default function CatalogPage() {
     const [page, setPage] = useState(1)

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Link, useParams } from 'react-router'
-import CategoryBadge from '../features/categories/components/CategoryBadge'
-import { useProductQuery } from '../features/products/hooks/useProductsQueries'
+import CategoryBadge from '../../categories/components/CategoryBadge'
+import { useProductQuery } from '../hooks/useProductsQueries'
 export default function ProductDetailPage() {
   const { id = '' } = useParams()
 

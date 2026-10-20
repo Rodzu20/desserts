@@ -1,6 +1,6 @@
-import QuantityStepper from './QuantityStepper'
-import { useCartStore } from '../features/cart/stores/userCartStore'
-import CategoryBadge from '../features/categories/components/CategoryBadge'
+import QuantityStepper from '../../cart/components/QuantityStepper'
+import { useCartStore } from '../../cart/stores/userCartStore'
+import CategoryBadge from '../../categories/components/CategoryBadge'
 type ProductCardProps = {
   id: string
   name: string
