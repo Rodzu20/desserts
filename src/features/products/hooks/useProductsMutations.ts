@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import {
   createProduct,
   updateProduct,
+  deleteProduct,
 } from '../services/productsService'
 
 import { useCartStore } from '../../cart/stores/userCartStore'
@@ -64,6 +65,28 @@ export function useUpdateProductMutation() {
     onError: () => {
       toast.error(
         'No pudimos actualizar el producto. Comprueba la conexión con la API.',
+      )
+    },
+  })
+}
+
+export function useDeleteProductMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: deleteProduct,
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['products'],
+      })
+
+      toast.success('Producto eliminado correctamente.')
+    },
+
+    onError: () => {
+      toast.error(
+        'No pudimos eliminar el producto. Comprueba la conexión con la API.',
       )
     },
   })

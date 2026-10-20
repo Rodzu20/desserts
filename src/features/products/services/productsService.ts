@@ -68,3 +68,7 @@ export async function updateProduct({
 
   return response.data
 }
+
+export async function deleteProduct(id: string): Promise<void> {
+  await api.delete(`/products/${encodeURIComponent(id)}`)
+}

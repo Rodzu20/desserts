@@ -13,7 +13,9 @@ import {
 } from '../features/cart/stores/userCartStore'
 import { useCategoriesQuery } from '../features/categories/hooks/useCategoriesQuery'
 import { useProductsQuery } from '../features/products/hooks/useProductsQueries'
-
+import DeleteProductModal from '../features/products/components/DeleteProductModal'
+import { useDeleteProductMutation } from '../features/products/hooks/useProductsMutations'
+import type { Product } from '../features/products/interfaces/product'
 
 export default function CatalogPage() {
     const [page, setPage] = useState(1)
@@ -44,7 +46,10 @@ export default function CatalogPage() {
     const products = result?.data ?? []
 
     const hasFilters = Boolean(search || category)
+    const [productToDelete, setProductToDelete] =
+        useState<Product | null>(null)
 
+    const deleteMutation = useDeleteProductMutation()
     function retryProducts() {
         void productsQuery.refetch()
         void categoriesQuery.refetch()
@@ -61,6 +66,26 @@ export default function CatalogPage() {
 
         cart.clearCart()
         setIsCartOpen(false)
+    }
+    function closeDeleteModal() {
+        if (deleteMutation.isPending) return
+
+        setProductToDelete(null)
+        deleteMutation.reset()
+    }
+
+    function handleDeleteProduct() {
+        if (!productToDelete || deleteMutation.isPending) return
+
+        deleteMutation.mutate(productToDelete.id, {
+            onSuccess: () => {
+                setProductToDelete(null)
+
+                if (products.length === 1 && page > 1) {
+                    setPage(page - 1)
+                }
+            },
+        })
     }
     return (
         <div className="min-h-screen bg-page text-ink">
@@ -240,6 +265,18 @@ export default function CatalogPage() {
                                         >
                                             Ver detalle →
                                         </Link>
+                                        <button
+                                            type="button"
+                                            aria-haspopup="dialog"
+                                            aria-label={`Eliminar ${product.name}`}
+                                            onClick={() => {
+                                                deleteMutation.reset()
+                                                setProductToDelete(product)
+                                            }}
+                                            className="mt-2 block text-sm font-semibold text-red-700 hover:underline"
+                                        >
+                                            Eliminar producto
+                                        </button>
                                     </div>
                                 ))}
                             </div>
@@ -297,6 +334,18 @@ export default function CatalogPage() {
                 isOpen={confirmedOrder !== null}
                 onClose={() => setConfirmedOrder(null)}
                 order={confirmedOrder}
+            />
+            <DeleteProductModal
+                isOpen={productToDelete !== null}
+                productName={productToDelete?.name ?? ''}
+                isPending={deleteMutation.isPending}
+                onClose={closeDeleteModal}
+                onConfirm={handleDeleteProduct}
+                errorMessage={
+                    deleteMutation.isError
+                        ? 'No se pudo eliminar. Inténtalo nuevamente.'
+                        : undefined
+                }
             />
         </div>
     )

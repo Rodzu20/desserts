@@ -100,13 +100,6 @@
       "categoryId": "9",
       "price": 6.5,
       "image": "/assets/images/image-panna-cotta-desktop.jpg"
-    },
-    {
-      "name": "Waffle de chocolate",
-      "categoryId": "1",
-      "price": 8.5,
-      "image": "/assets/images/image-waffle-desktop.jpg",
-      "id": "FTJArVzFk_w"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
