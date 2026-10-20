@@ -76,7 +76,14 @@ export function useDeleteProductMutation() {
   return useMutation({
     mutationFn: deleteProduct,
 
-    onSuccess: async () => {
+    onSuccess: async (_, id) => {
+      useCartStore.getState().removeProduct(id)
+
+      queryClient.removeQueries({
+        queryKey: ['products', 'detail', id],
+        exact: true,
+      })
+
       await queryClient.invalidateQueries({
         queryKey: ['products'],
       })
